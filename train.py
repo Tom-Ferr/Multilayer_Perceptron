@@ -41,7 +41,7 @@ MAIN
 
 if __name__ ==  "__main__":
     try:
-        data = pd.read_csv("data.csv")
+        data = pd.read_csv("data.csv", header=None)
     except:
         print('File not found or it is corrupted.\nPlease, make sure that ./data.csv is available.')
         exit(1)

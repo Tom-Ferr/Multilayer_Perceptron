@@ -46,6 +46,15 @@ def accuracy(y_hat, x):
     acc = np.where(y_hat == x, 1, 0)
     print("Training is completed with an accuracy of {}%".format(round(acc.sum() / len(y_hat), 4) * 100))
 
+def treating_data(data):
+    X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].dropna()
+    Y = X[1].to_numpy()
+    X.drop(1, axis=1, inplace=True)
+    columns = X.columns.to_numpy()
+    X_norm = normalization(X, X.min(), X.max())
+    return train_test_split(X_norm,Y, test_size=0.2, random_state=1)
+
+
 
 
 """
@@ -59,12 +68,7 @@ if __name__ ==  "__main__":
         print('File not found or it is corrupted.\nPlease, make sure that ./data.csv is available.')
         exit(1)
     try:
-        X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].dropna()
-        Y = X[1].to_numpy()
-        X.drop(1, axis=1, inplace=True)
-        columns = X.columns.to_numpy()
-        X_norm = normalization(X, X.min(), X.max())
-        X_train, X_test, Y_train, Y_test = train_test_split(X_norm,Y, test_size=0.2, random_state=1)
+        X_train, X_test, Y_train, Y_test = treating_data(data)
 
         theta = stochastic_gradient_descent(X_train,Y_train)
 

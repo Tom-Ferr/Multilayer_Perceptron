@@ -15,11 +15,14 @@ if __name__ ==  "__main__":
         exit(1)
     if sys.argv[1] == "--help":
             print('''
-            [1stARG=Program Name][2ndARG=Data View Mode]\n
+            [1stARG=Program Name][2ndARG=Data View Mode][3rdARG=# 1-31](optional)\n
             \tPossible inputs as 2nd parameter:\n
             \t\t1: -h or --histogram\n
             \t\t2: -s or --scatter\n
             \t\t3: -m or --matrix\n
+            \t 3rd argument should be used only with \'--matrix\' mode
+            \t\t it must be an integer from 1 to 31
+            \t\t if no 3rd argument is passed when matrix mode is selected, then the default will be 1
             ''')
             exit(0)
     try:
@@ -42,7 +45,7 @@ if __name__ ==  "__main__":
             i = j = 0
             for col in range(1,32):
                 ax[i][j].hist(M[col], bins=15, edgecolor='black',color='red', alpha=0.3)
-                ax[i][j].hist(B[col], bins=15, edgecolor='black',color='blue', alpha=0.3)
+                ax[i][j].hist(B[col], bins=15, edgecolor='black',color='cyan', alpha=0.3)
                 i = (i+1)%4 
                 if i == 0:
                     j += 1
@@ -62,20 +65,24 @@ if __name__ ==  "__main__":
         elif (sys.argv[1] == '--matrix' or sys.argv[1] == '-m'):
             fig, ax = plt.subplots(4,8)
             i = j = 0
-            if len(sys.argv) >= 3:
-                k = int(sys.argv[2])
-            else:
-                k = 1
-            for col in range(1,32):
-                ax[i][j].scatter(M[k], M[col], edgecolor='black',color='red', alpha=0.3)
-                ax[i][j].scatter(B[k], B[col], edgecolor='black',color='cyan', alpha=0.3)
-                i = (i+1)%4 
-                if i == 0:
-                    j += 1
+            try:
+                if len(sys.argv) >= 3:
+                    k = int(sys.argv[2])
+                else:
+                    k = 1
+                for col in range(1,32):
+                    ax[i][j].scatter(M[k], M[col], edgecolor='black',color='red', alpha=0.3)
+                    ax[i][j].scatter(B[k], B[col], edgecolor='black',color='cyan', alpha=0.3)
+                    i = (i+1)%4 
+                    if i == 0:
+                        j += 1
+            except:
+                print("Please, the 3rd argument must be an integer from 1 to 31")
+                exit(3)
             fig.delaxes(ax[3,7])
             plt.show()
         else:
             print("Wrong argument was passed.\nPlease, run this with --help for more information")
     except Exception as e:
         print(e)
-        exit(3)
+        exit(4)

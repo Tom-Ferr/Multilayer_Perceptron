@@ -60,28 +60,20 @@ if __name__ ==  "__main__":
             fig.delaxes(ax[3,7])
             plt.show()
         elif (sys.argv[1] == '--matrix' or sys.argv[1] == '-m'):
-            fig, ax = plt.subplots(31,31)
+            fig, ax = plt.subplots(4,8)
             i = j = 0
-            for y in range(31):
-                for x in range(31):
-                    if x == y:
-                        ax[i][j].hist(M[x+1], bins=15, edgecolor='black',color='red', alpha=0.3)
-                        ax[i][j].hist(B[x+1], bins=15, edgecolor='black',color='blue', alpha=0.3)
-                    else:           
-                        ax[i][j].scatter(M[x+1], M[y+1], edgecolor='black',color='red', alpha=0.3)
-                        ax[i][j].scatter(B[x+1], B[y+1], edgecolor='black',color='cyan', alpha=0.3)
-                    # if y == 0:
-                    #     ax[x][y].set_title(col[x], fontsize=6, x=-1, y=0.2)
-                    #     ax[x][y].yaxis.set_ticks_position('left')
-                    # else:
-                    #     ax[x][y].yaxis.set_visible(False)
-                    # if x == (n - 1):
-                    #     ax[x][y].set_xlabel(col[y], fontsize=5)
-                    #     ax[x][y].xaxis.set_ticks_position('bottom')
-                    # else:
-                    #     ax[x][y].xaxis.set_visible(False)
+            if len(sys.argv) >= 3:
+                k = int(sys.argv[2])
+            else:
+                k = 1
+            for col in range(1,32):
+                ax[i][j].scatter(M[k], M[col], edgecolor='black',color='red', alpha=0.3)
+                ax[i][j].scatter(B[k], B[col], edgecolor='black',color='cyan', alpha=0.3)
+                i = (i+1)%4 
+                if i == 0:
+                    j += 1
+            fig.delaxes(ax[3,7])
             plt.show()
-               
         else:
             print("Wrong argument was passed.\nPlease, run this with --help for more information")
     except Exception as e:

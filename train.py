@@ -16,7 +16,7 @@ def hypothesis(x, thetas):
     return sigmoid(np.dot(x, thetas))
 
 def stochastic_gradient_descent(X,Y):
-    learning_rate = 0.1
+    learning_rate = 1
     x = np.hstack((np.ones((X.shape[0],1)), X))
     m = x.shape[0]
     theta = []
@@ -34,6 +34,17 @@ def stochastic_gradient_descent(X,Y):
     print(end="\n")
     return theta
 
+def predict(X, thetas, houses):
+    x = np.hstack((np.ones((X.shape[0],1)), X))
+    Y_hat = np.array([[sigmoid(i.dot(theta)) for theta in thetas] for i in x])
+    Y_hat = np.array([houses[np.argmax(j)] for j in Y_hat])
+    return Y_hat
+
+def accuracy(y_hat, x):
+    acc = np.where(y_hat == x, 1, 0)
+    print("Training is completed with an accuracy of {}%".format(round(acc.sum() / len(y_hat), 4) * 100))
+
+
 
 """
 MAIN
@@ -45,3 +56,25 @@ if __name__ ==  "__main__":
     except:
         print('File not found or it is corrupted.\nPlease, make sure that ./data.csv is available.')
         exit(1)
+    try:
+        X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].dropna()
+        Y = X[1].to_numpy()
+        X.drop(1, axis=1, inplace=True)
+        columns = X.columns.to_numpy()
+        X_norm = normalization(X, X.min(), X.max())
+        X_train, X_test, Y_train, Y_test = train_test_split(X_norm,Y, test_size=0.2, random_state=1)
+
+        theta = stochastic_gradient_descent(X_train,Y_train)
+
+        theta_dict = {column: row for row, column in theta}
+        df_theta = pd.DataFrame(theta_dict)
+        # df_theta.to_csv("thetas.csv", index=False)
+
+        thetas = df_theta.to_numpy()
+        houses = df_theta.columns.to_list()
+        Y_hat = predict(X_test, thetas.T, houses)
+        accuracy(Y_hat, Y_test)
+    except Exception as e:
+        print('Please, make sure that {} is well formatted'.format(sys.argv[1]))
+        print(e)
+        exit(3)

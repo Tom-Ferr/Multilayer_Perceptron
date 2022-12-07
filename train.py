@@ -12,6 +12,10 @@ def linear_interpolation(value, mini, maxi):
 def sigmoid(z):
     return 1/(1 + np.exp(-z))
 
+def softmax(V):
+    e = np.exp(V)
+    return e / e.sum()
+
 def hypothesis(x, thetas):
     return sigmoid(np.dot(x, thetas))
 
@@ -50,23 +54,28 @@ def treating_data(data):
     X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].dropna()
     Y = X[1].to_numpy()
     X.drop(1, axis=1, inplace=True)
-    columns = X.columns.to_numpy()
+    # columns = X.columns.to_numpy()
     X_norm = normalization(X, X.min(), X.max())
     return train_test_split(X_norm,Y, test_size=0.2, random_state=1)
-
-
-
 
 """
 MAIN
 """
 
 if __name__ ==  "__main__":
+
+    """
+    Read File
+    """
     try:
         data = pd.read_csv("data.csv", header=None)
     except:
         print('File not found or it is corrupted.\nPlease, make sure that ./data.csv is available.')
         exit(1)
+
+    """
+    Code
+    """ 
     try:
         X_train, X_test, Y_train, Y_test = treating_data(data)
 
@@ -83,4 +92,4 @@ if __name__ ==  "__main__":
     except Exception as e:
         print('Please, make sure that {} is well formatted'.format(sys.argv[1]))
         print(e)
-        exit(3)
+        exit(2)

@@ -78,18 +78,18 @@ def feed_foward(X):
     Phase One
     """
     zh1 = np.dot(X, thetas_h) + bias_h
-    ah1 = sigmoid(zh)
+    ah1 = sigmoid(zh1)
     
     """
     Phase Two
     """
-    zh2 = np.dot(zh1, thetas_h) + bias_h
+    zh2 = np.dot(ah1, thetas_h) + bias_h
     ah2 = sigmoid(zh2)
 
     """
     Phase Three
     """
-    zo = np.dot(ah, thetas_o) + bias_o
+    zo = np.dot(ah2, thetas_o) + bias_o
     ao = softmax(zo)
 
 def back_propagation():

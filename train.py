@@ -58,6 +58,45 @@ def treating_data(data):
     X_norm = normalization(X, X.min(), X.max())
     return train_test_split(X_norm,Y, test_size=0.2, random_state=1)
 
+def feed_foward(X):
+    hidden_nodes = 10
+    output_labels = 2
+    rows = X.shape[0]
+    cols = X.shape[1]
+    alpha = 0.01
+
+    thetas_h1 = np.random.rand(cols, hidden_nodes)
+    bias_h1 = np.random.rand(hidden_nodes)
+
+    thetas_h2 = np.random.rand(cols, hidden_nodes)
+    bias_h2 = np.random.rand(hidden_nodes)
+
+    thetas_o = np.random.rand(hidden_nodes, output_labels)
+    bias_o = np.random.rand(output_labels)
+
+    """
+    Phase One
+    """
+    zh1 = np.dot(X, thetas_h) + bias_h
+    ah1 = sigmoid(zh)
+    
+    """
+    Phase Two
+    """
+    zh2 = np.dot(zh1, thetas_h) + bias_h
+    ah2 = sigmoid(zh2)
+
+    """
+    Phase Three
+    """
+    zo = np.dot(ah, thetas_o) + bias_o
+    ao = softmax(zo)
+
+def back_propagation():
+
+
+
+
 """
 MAIN
 """

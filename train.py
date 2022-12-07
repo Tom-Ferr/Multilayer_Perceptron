@@ -92,6 +92,13 @@ def feed_foward(X):
     zo = np.dot(ah2, thetas_o) + bias_o
     ao = softmax(zo)
 
+def cost1(Y, Y_hat):
+    return -np.dot(Y, np.log(Y_hat))
+
+def cost2(Y, Y_hat):
+    cost = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - y_pred)
+    return cost.mean()
+
 def back_propagation():
 
 

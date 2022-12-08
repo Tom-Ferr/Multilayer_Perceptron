@@ -93,7 +93,7 @@ def multilayer_perceptron(X, Y):
     thetas = np.array([thetas_h1, thetas_h2, thetas_o])
     bias = np.array([bias_h1, bias_h2, bias_o])
     
-    for e in epoch:
+    for e in range(epoch):
         Y_hat = feed_foward(X, thetas, bias)
         loss = cost(Y, Y_hat)
         stochastic_gradient_descent()

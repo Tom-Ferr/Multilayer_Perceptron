@@ -58,48 +58,64 @@ def treating_data(data):
     X_norm = normalization(X, X.min(), X.max())
     return train_test_split(X_norm,Y, test_size=0.2, random_state=1)
 
-def feed_foward(X):
+def feed_foward(X, thetas, bias):
+    layers = 3
+    a = np.array([X,None,None,None])
+    for l in range(layers):
+        z = np.dot(a[l], thetas[l]) + bias[l]
+        a[l+1] = sigmoid(z)
+    return a[layers]
+
+    
+def cost(Y, Y_hat):
+    cost = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - y_pred)
+    return cost.mean()
+
+def back_propagation():
+
+def multilayer_perceptron(X, Y):
     hidden_nodes = 10
     output_labels = 2
     rows = X.shape[0]
     cols = X.shape[1]
     alpha = 0.01
+    epoch = 2000
 
     thetas_h1 = np.random.rand(cols, hidden_nodes)
-    bias_h1 = np.random.rand(hidden_nodes)
+    bias_h1 = np.random.randn(hidden_nodes)
 
     thetas_h2 = np.random.rand(cols, hidden_nodes)
-    bias_h2 = np.random.rand(hidden_nodes)
+    bias_h2 = np.random.randn(hidden_nodes)
 
     thetas_o = np.random.rand(hidden_nodes, output_labels)
-    bias_o = np.random.rand(output_labels)
+    bias_o = np.random.randn(output_labels)
 
-    """
-    Phase One
-    """
-    zh1 = np.dot(X, thetas_h) + bias_h
-    ah1 = sigmoid(zh1)
+    thetas = np.array([thetas_h1, thetas_h2, thetas_o])
+    bias = np.array([bias_h1, bias_h2, bias_o])
     
-    """
-    Phase Two
-    """
-    zh2 = np.dot(ah1, thetas_h) + bias_h
-    ah2 = sigmoid(zh2)
+    for e in epoch:
+        Y_hat = feed_foward(X, thetas, bias)
+        loss = cost(Y, Y_hat)
+        stochastic_gradient_descent()
 
-    """
-    Phase Three
-    """
-    zo = np.dot(ah2, thetas_o) + bias_o
-    ao = softmax(zo)
+    # """
+    # Phase One
+    # """
+    # zh1 = np.dot(X, thetas_h1) + bias_h1
+    # ah1 = sigmoid(zh1)
+    
+    # """
+    # Phase Two
+    # """
+    # zh2 = np.dot(ah1, thetas_h2) + bias_h2
+    # ah2 = sigmoid(zh2)
 
-def cost1(Y, Y_hat):
-    return -np.dot(Y, np.log(Y_hat))
+    # """
+    # Phase Three
+    # """
+    # zo = np.dot(ah2, thetas_o) + bias_o
+    # ao = softmax(zo)
 
-def cost2(Y, Y_hat):
-    cost = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - y_pred)
-    return cost.mean()
-
-def back_propagation():
 
 
 

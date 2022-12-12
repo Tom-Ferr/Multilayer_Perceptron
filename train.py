@@ -71,7 +71,10 @@ def cost(Y, Y_hat):
     cost = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - y_pred)
     return cost.mean()
 
-def back_propagation():
+def back_propagation(X, thetas, bias):
+    for i in range(2):
+        der = stochastic_gradient_descent(X,Y,thetas[i], bias[i])
+
 
 def multilayer_perceptron(X, Y):
     hidden_nodes = 10

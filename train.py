@@ -16,30 +16,6 @@ def softmax(V):
     e = np.exp(V)
     return e / e.sum()
 
-def hypothesis(x, thetas):
-    return sigmoid(np.dot(x, thetas))
-
-def stochastic_gradient_descent(X,Y):
-    learning_rate = 1
-    x = np.hstack((np.ones((X.shape[0],1)), X))
-    m = x.shape[0]
-    theta = []
-    keys = np.unique(Y)
-    keys_size = keys.shape[0]
-
-    epoch = 0
-    for k in keys:
-        thetas = np.zeros(x.shape[1])
-        y = np.where(Y == k, 1, 0)
-        for it in range(m):
-            print("\r\033[0Klearning in stochastic mode... {}%".format(int((((it + (m * epoch)) +1) / (m * keys_size))*100)), end="")
-            gradient = x[it] * (hypothesis(x[it], thetas.T) - y[it])
-            thetas -= learning_rate * gradient
-        theta.append((thetas, k))
-        epoch += 1
-    print(end="\n")
-    return theta
-
 def predict(X, thetas, houses):
     x = np.hstack((np.ones((X.shape[0],1)), X))
     Y_hat = np.array([[sigmoid(i.dot(theta)) for theta in thetas] for i in x])
@@ -51,30 +27,40 @@ def accuracy(y_hat, x):
     print("Training is completed with an accuracy of {}%".format(round(acc.sum() / len(y_hat), 4) * 100))
 
 def treating_data(data):
-    X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].dropna()
+    X = data[[1,2,4,5,8,9,12,14,15,22,24,25,28,29]].fillna(0)
     Y = X[1].to_numpy()
     X.drop(1, axis=1, inplace=True)
     # columns = X.columns.to_numpy()
     X_norm = normalization(X, X.min(), X.max())
     return train_test_split(X_norm,Y, test_size=0.2, random_state=1)
 
-def feed_foward(X, thetas, bias):
-    layers = 3
-    a = np.array([X,None,None,None])
-    for l in range(layers):
-        z = np.dot(a[l], thetas[l]) + bias[l]
-        a[l+1] = sigmoid(z)
-    return a[layers]
-
-    
 def cost(Y, Y_hat):
     cost = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - y_pred)
     return cost.mean()
 
-def back_propagation(X, thetas, bias):
-    for i in range(2):
-        der = stochastic_gradient_descent(X,Y,thetas[i], bias[i])
+def feed_foward(X, thetas, bias):
+    z = []
+    a = [X]
+    layers = bias.shape[0]
+    activation = sigmoid
+    for i in range(layers):
+        z.append(np.dot(a[i], thetas[i]) + bias[i])
+        if i == layers - 1:
+            activation = softmax
+        a.append(activation(z))
+    return z, a
+    
 
+def gradient_descent(a, z, thetas, bias):
+    layers = bias.shape[0]
+    for i in range(layers):
+        sigmoid_der = sigmoid(z[i]) * (1 - sigmoid(z[i]))
+        delta = np.dot(thetas[i].T, (a[i] - Y) * sigmoid_der)
+    return np.dot(alpha, gradient)
+
+def back_propagation(X, Y, Y_hat, thetas, bias):
+    np.dot(thetas[i-1].T, Y_hat - Y)
+    gradient_descent(thetas, bias)
 
 def multilayer_perceptron(X, Y):
     hidden_nodes = 10
